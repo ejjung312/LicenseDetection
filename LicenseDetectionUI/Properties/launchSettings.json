@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "LicenseDetectionUI": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}
