@@ -10,7 +10,7 @@ namespace LicenseDetectionUI.HostBuilders
         {
             host.ConfigureServices((context, services) =>
             {
-                services.AddSingleton<MainWindow>(s => new MainWindow(s.GetRequiredService<MainViewModel>));
+                services.AddSingleton<MainWindow>(s => new MainWindow(s.GetRequiredService<MainViewModel>()));
             });
 
             return host;

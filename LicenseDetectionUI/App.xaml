@@ -1,8 +1,16 @@
 ﻿<Application x:Class="LicenseDetectionUI.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:viewmodels="clr-namespace:LicenseDetectionUI.ViewModels"
+             xmlns:views="clr-namespace:LicenseDetectionUI.Views"
              xmlns:local="clr-namespace:LicenseDetectionUI">
     <Application.Resources>
-         
+        <DataTemplate DataType="{x:Type viewmodels:VideoViewModel}">
+            <views:VideoView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewmodels:LoggingViewModel}">
+            <views:Logging />
+        </DataTemplate>
     </Application.Resources>
 </Application>

@@ -1,8 +1,6 @@
 ﻿using LicenseDetectionUI.HostBuilders;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Configuration;
-using System.Data;
 using System.Windows;
 
 namespace LicenseDetectionUI
@@ -22,6 +20,7 @@ namespace LicenseDetectionUI
         private static IHostBuilder CreateHostBuilder(string[] args=null)
         {
             return Host.CreateDefaultBuilder(args)
+                .AddStores()
                 .AddViewModels()
                 .AddViews();
         }
@@ -34,6 +33,14 @@ namespace LicenseDetectionUI
             window.Show();
 
             base.OnStartup(e);
+        }
+
+        protected override async void OnExit(ExitEventArgs e)
+        {
+            await _host.StopAsync();
+            _host.Dispose();
+
+            base.OnExit(e);
         }
     }
 }
