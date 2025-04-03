@@ -1,4 +1,5 @@
-﻿using LicenseDetectionUI.State.Navigators;
+﻿using LicenseDetectionUI.Services;
+using LicenseDetectionUI.State.Navigators;
 using LicenseDetectionUI.ViewModels;
 using LicenseDetectionUI.ViewModels.Factories;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,9 +29,9 @@ namespace LicenseDetectionUI.HostBuilders
             return host;
         }
 
-        private static VideoViewModel CreateVideoViewModel(IServiceProvider servicees)
+        private static VideoViewModel CreateVideoViewModel(IServiceProvider services)
         {
-            return new VideoViewModel();
+            return new VideoViewModel(services.GetRequiredService<IVideoService>());
         }
     }
 }

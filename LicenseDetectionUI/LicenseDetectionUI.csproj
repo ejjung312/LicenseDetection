@@ -32,4 +32,8 @@
     <PackageReference Include="System.Drawing.Common" Version="9.0.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Helper\" />
+  </ItemGroup>
+
 </Project>

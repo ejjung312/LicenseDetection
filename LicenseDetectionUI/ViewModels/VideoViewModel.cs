@@ -1,35 +1,71 @@
 ﻿using LicenseDetectionUI.Commands;
+using LicenseDetectionUI.Services;
+using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace LicenseDetectionUI.ViewModels
 {
     public class VideoViewModel : ViewModelBase
     {
-        private string _test;
-        public string Test
+        private readonly IVideoService _videoService;
+
+        private ImageSource _videoFrameImage;
+        public ImageSource VideoFrameImage
         {
             get
             {
-                return _test;
+                return _videoFrameImage;
             }
             set
             {
-                _test = value;
-                OnPropertyChanged(nameof(Test));
+                _videoFrameImage = value;
+                OnPropertyChanged(nameof(VideoFrameImage));
             }
         }
 
-        //public ICommand FrameProcessCommand { get; }
+        private string _video = "Video/car3.mp4";
+        public string Video => _video;
 
-        public VideoViewModel()
+        private CancellationTokenSource _token;
+
+        public ICommand FrameProcessCommand { get; }
+
+        public VideoViewModel(IVideoService videoService)
         {
-            _test = "test!";
+            _videoService = videoService;
 
-            //FrameProcessCommand = new FrameProcessCommand(this);
+            _videoService.FrameProcessed += VideoService_FrameProcessed;
+
+            _token = new CancellationTokenSource();
+            FrameProcessCommand = new FrameProcessCommand(this, _videoService, _token.Token);
+        }
+
+        private void VideoService_FrameProcessed(BitmapSource processedImg, BitmapSource licensePlateImage, string licensePlateText)
+        {
+            // UI 스레드에서 호출
+            var dispatcher = Application.Current?.Dispatcher;
+            if (dispatcher != null && !dispatcher.HasShutdownStarted)
+            {
+                try
+                {
+                    dispatcher.Invoke(() =>
+                    {
+                        VideoFrameImage = processedImg;
+                    });
+                }
+                catch (TaskCanceledException ex)
+                {
+                    
+                }
+            }
         }
 
         public override void Dispose()
         {
+            _token.Cancel();
+
             base.Dispose();
         }
     }

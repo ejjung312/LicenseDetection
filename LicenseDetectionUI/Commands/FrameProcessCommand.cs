@@ -1,20 +1,25 @@
-﻿using LicenseDetectionUI.ViewModels;
-using System.Windows;
+﻿using LicenseDetectionUI.Services;
+using LicenseDetectionUI.ViewModels;
+using System.Threading;
 
 namespace LicenseDetectionUI.Commands
 {
     public class FrameProcessCommand : AsyncCommandBase
     {
-        private readonly VideoViewModel _viewoViewModel;
+        private readonly VideoViewModel _videoViewModel;
+        private readonly IVideoService _videoService;
+        private readonly CancellationToken _cancellationToken;
 
-        public FrameProcessCommand(VideoViewModel viewoViewModel)
+        public FrameProcessCommand(VideoViewModel videoViewModel, IVideoService videoService, CancellationToken cancellationToken)
         {
-            _viewoViewModel = viewoViewModel;
+            _videoViewModel = videoViewModel;
+            _videoService = videoService;
+            _cancellationToken = cancellationToken;
         }
 
         public override async Task ExecuteAsync(object? parameter)
         {
-            MessageBox.Show("Frame Processing!");
+            Task.Run(() => _videoService.VideoPlayAsync(_videoViewModel.Video, _cancellationToken));
         }
     }
 }
