@@ -9,5 +9,5 @@
 extern "C" {
 	LICENSE_DETECTION_API void ConvertToGray(unsigned char* data, int width, int height, int stride);
 
-	LICENSE_DETECTION_API void LicenseDetection(const char* modelPath, unsigned char* data, int width, int height, int stride);
+	LICENSE_DETECTION_API void LicenseDetection(const char* modelPath, const char* classNames, unsigned char* data, int width, int height, int stride);
 }
