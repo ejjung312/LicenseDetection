@@ -75,15 +75,9 @@ Yolo11::Yolo11(const std::string& model_path, float min_conf, float iou_thresh, 
 }
 
 cv::Mat Yolo11::preprocess(const cv::Mat& image) {
-    cv::Mat resized;
-    cv::resize(image, resized, input_size_);
-    //DEBUG_PRINT_MAT_SHAPE(resized);
-
+    // resize + blob 한 번에 처리
     cv::Mat blob;
-    // blobFromImage: 딥러닝 모델(cn::dnn::Net)이 처리할 수 있는 형태로 변환
-    //                (batch_size, channels, height, width) 형식으로 변환.(NCHW)
-    // 입력이미지, 결과, 정규화, 입력크기, 평균값(입력 이미지에서 뺄 평균값), true(BGR->RGB), false(입력이미지를 input_size_ 크기로 비율을 유지하면서 패딩추가), float32로 변환
-    cv::dnn::blobFromImage(resized, blob, 1.0 / 255.0, input_size_, cv::Scalar(), true, false, CV_32F);7
+    cv::dnn::blobFromImage(image, blob, 1.0 / 255.0, input_size_, cv::Scalar(), true, false, CV_32F);
     DEBUG_PRINT_MAT_SHAPE(blob);
 
     return blob;
