@@ -19,7 +19,7 @@ namespace LicenseDetectionUI.Commands
 
         public override async Task ExecuteAsync(object? parameter)
         {
-            Task.Run(() => _videoService.VideoPlayAsync(_videoViewModel.Video, _cancellationToken));
+            await _videoService.VideoPlayAsync(_videoViewModel.Video, _cancellationToken);
         }
     }
 }
