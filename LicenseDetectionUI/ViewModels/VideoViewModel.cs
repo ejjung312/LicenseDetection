@@ -50,7 +50,8 @@ namespace LicenseDetectionUI.ViewModels
             {
                 try
                 {
-                    dispatcher.Invoke(() =>
+                    // 비동기 UI 갱신
+                    dispatcher.InvokeAsync(() =>
                     {
                         VideoFrameImage = processedImg;
                     });
