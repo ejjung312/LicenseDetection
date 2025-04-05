@@ -1,6 +1,7 @@
 ﻿using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows.Media.Imaging;
 
 namespace LicenseDetectionUI.Services
@@ -9,7 +10,10 @@ namespace LicenseDetectionUI.Services
     {
         public event Action<BitmapSource, BitmapSource, string> FrameProcessed;
 
-        public async Task VideoPlayAsync(string videoPath, CancellationToken cancellationToken)
+        [DllImport("LicenseDetection.dll")]
+        public static extern void LicenseDetection(string modelPath, string classPath, IntPtr data, int width, int height, int stride);
+
+        public async Task VideoPlayAsync(string videoPath, string modelPath, string classPath, CancellationToken cancellationToken)
         {
             await Task.Run(() =>
             {
@@ -23,10 +27,17 @@ namespace LicenseDetectionUI.Services
                 {
                     if (!cap.Read(frame) || frame.Empty()) break;
 
-                    BitmapSource bitmapSource = frame.ToBitmapSource();
-                    bitmapSource.Freeze();
+                    unsafe
+                    {
+                        //using var frameClone = frame.Clone();
+                        IntPtr dataPtr = frame.Data; // Mat 내부 메모리 포인터
+                        LicenseDetection(modelPath, classPath, dataPtr, frame.Width, frame.Height, (int)frame.Step());
 
-                    FrameProcessed?.Invoke(bitmapSource, bitmapSource, null);
+                        BitmapSource bitmapSource = frame.ToBitmapSource();
+                        bitmapSource.Freeze();
+
+                        FrameProcessed?.Invoke(bitmapSource, bitmapSource, null);
+                    }
 
                     Thread.Sleep(30);
                 }

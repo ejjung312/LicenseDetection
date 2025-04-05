@@ -65,8 +65,8 @@ Yolo11::Yolo11(const std::string& model_path, float min_conf, float iou_thresh, 
         }
     }
 
-    input_size_.width = 640;
-    input_size_.height = 640;
+    input_size_.width = 320;
+    input_size_.height = 320;
 
     loadClassNames(resolved_names_file);
 
@@ -77,13 +77,13 @@ Yolo11::Yolo11(const std::string& model_path, float min_conf, float iou_thresh, 
 cv::Mat Yolo11::preprocess(const cv::Mat& image) {
     cv::Mat resized;
     cv::resize(image, resized, input_size_);
-    DEBUG_PRINT_MAT_SHAPE(resized);
+    //DEBUG_PRINT_MAT_SHAPE(resized);
 
     cv::Mat blob;
     // blobFromImage: 딥러닝 모델(cn::dnn::Net)이 처리할 수 있는 형태로 변환
     //                (batch_size, channels, height, width) 형식으로 변환.(NCHW)
     // 입력이미지, 결과, 정규화, 입력크기, 평균값(입력 이미지에서 뺄 평균값), true(BGR->RGB), false(입력이미지를 input_size_ 크기로 비율을 유지하면서 패딩추가), float32로 변환
-    cv::dnn::blobFromImage(resized, blob, 1.0 / 255.0, input_size_, cv::Scalar(), true, false, CV_32F);
+    cv::dnn::blobFromImage(resized, blob, 1.0 / 255.0, input_size_, cv::Scalar(), true, false, CV_32F);7
     DEBUG_PRINT_MAT_SHAPE(blob);
 
     return blob;
@@ -184,6 +184,7 @@ std::vector<ObjectBBox> Yolo11::detect(const cv::Mat& image) {
 
     net_.setInput(blob);
     std::vector<cv::Mat> outputs;
+
     // net_.getUnconnectedOutLayersNames() - 출력 레이어(마지막 레이어)의 이름 반환
     net_.forward(outputs, net_.getUnconnectedOutLayersNames());
     assert(outputs.size() == 1 && "Unexpected number of outputs");

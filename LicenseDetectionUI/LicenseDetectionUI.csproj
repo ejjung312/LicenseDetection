@@ -6,14 +6,35 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Onnx\license.names" />
     <None Remove="Video\car3.mp4" />
+    <None Remove="Video\car4.mp4" />
+    <None Remove="Video\car5.mp4" />
+    <None Remove="Video\car6.mp4" />
+    <None Remove="Video\car7.mp4" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Onnx\license.names">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Video\car3.mp4">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Video\car4.mp4">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Video\car5.mp4">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Video\car6.mp4">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Video\car7.mp4">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -34,6 +55,12 @@
 
   <ItemGroup>
     <Folder Include="Helper\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Onnx\license_detect_model.onnx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

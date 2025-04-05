@@ -6,6 +6,6 @@ namespace LicenseDetectionUI.Services
     {
         event Action<BitmapSource, BitmapSource, string> FrameProcessed;
 
-        Task VideoPlayAsync(string videoPath, CancellationToken cancellationToken);
+        Task VideoPlayAsync(string videoPath, string modelPath, string classPath, CancellationToken cancellationToken);
     }
 }
