@@ -28,12 +28,6 @@ namespace LicenseDetectionUI.ViewModels
         private string _video = "Video/car3.mp4";
         public string Video => _video;
 
-        private string _license_detect_model = "Onnx/license_detect_model.onnx";
-        public string License_Detect_Model => _license_detect_model;
-
-        private string _license_class = "Onnx/license.names";
-        public string License_class => _license_class;
-
         private CancellationTokenSource _token;
 
         public ICommand FrameProcessCommand { get; }

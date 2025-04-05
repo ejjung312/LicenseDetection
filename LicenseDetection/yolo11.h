@@ -27,3 +27,5 @@ public:
 	std::map<int, std::string> getClassIdNamePairs() const;
 	std::vector<ObjectBBox> detect(const cv::Mat& image);
 };
+
+static Yolo11* g_license_model = nullptr;

@@ -4,14 +4,26 @@
 #include "objectbbox.h"
 #include "yolo11.h"
 
-void LicenseDetection(const char* licenseModelPath, const char* classNames, unsigned char* data, int width, int height, int stride)
+void InitLicenseModel(const char* modelPath, const char* classNames)
 {
-    try
+    if (!g_license_model)
     {
-        Yolo11 license_model(licenseModelPath, 0.25f, 0.25f,
+
+        g_license_model = new Yolo11(modelPath, 0.25f, 0.25f,
             [](int lbl_id, const std::string lbl)
             { return lbl_id >= 0 && lbl_id <= 8; },
             classNames);
+    }
+}
+
+void LicenseDetection(unsigned char* data, int width, int height, int stride)
+{
+    try
+    {
+        if (!g_license_model) {
+            std::cerr << "Model not initialized!" << std::endl;
+            return;
+        }
 
         cv::Mat frame(height, width, CV_8UC3, data, stride);
         if (frame.empty()) {
@@ -19,7 +31,7 @@ void LicenseDetection(const char* licenseModelPath, const char* classNames, unsi
             return;
         }
 
-        std::vector<ObjectBBox> bbox_list = license_model.detect(frame);
+        std::vector<ObjectBBox> bbox_list = g_license_model->detect(frame);
 
         for (auto& bbox : bbox_list)
         {
@@ -29,5 +41,14 @@ void LicenseDetection(const char* licenseModelPath, const char* classNames, unsi
     catch (const std::exception& e)
     {
         std::cerr << "OpenCV Exception: " << e.what() << std::endl;
+    }
+}
+
+void ReleaseLicenseModel()
+{
+    if (g_license_model)
+    {
+        delete g_license_model;
+        g_license_model = nullptr;
     }
 }

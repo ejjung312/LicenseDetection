@@ -1,6 +1,7 @@
 ﻿using LicenseDetectionUI.HostBuilders;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Runtime.InteropServices;
 using System.Windows;
 
 namespace LicenseDetectionUI
@@ -11,6 +12,12 @@ namespace LicenseDetectionUI
     public partial class App : Application
     {
         private readonly IHost _host;
+
+        [DllImport("LicenseDetection.dll")]
+        public static extern void InitLicenseModel(string modelPath, string classNames);
+
+        [DllImport("LicenseDetection.dll")]
+        public static extern void ReleaseLicenseModel();
 
         public App()
         {
@@ -34,6 +41,9 @@ namespace LicenseDetectionUI
             window.Show();
 
             base.OnStartup(e);
+
+            // 모델 로드
+            loadDetectModel();
         }
 
         protected override async void OnExit(ExitEventArgs e)
@@ -42,6 +52,24 @@ namespace LicenseDetectionUI
             _host.Dispose();
 
             base.OnExit(e);
+
+            // 모델 메모리 해제
+            ReleaseLicenseModel();
+        }
+
+        private void loadDetectModel()
+        {
+            try
+            {
+                string modelPath = "Onnx/license_detect_model.onnx";
+                string classPath = "Onnx/license.names";
+
+                InitLicenseModel(modelPath, classPath);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Model Load failed.");
+            }
         }
     }
 }
