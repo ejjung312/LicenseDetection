@@ -11,7 +11,7 @@ namespace LicenseDetectionUI.Services
         public event Action<BitmapSource, BitmapSource, string> FrameProcessed;
 
         [DllImport("LicenseDetection.dll")]
-        public static extern void LicenseDetection(string modelPath, string classPath, [In] byte[] data, int width, int height, int stride);
+        public static extern void LicenseDetection(string modelPath, string classPath, IntPtr data, int width, int height, int stride);
 
         public async Task VideoPlayAsync(string videoPath, string modelPath, string classPath, CancellationToken cancellationToken)
         {
@@ -27,12 +27,17 @@ namespace LicenseDetectionUI.Services
                 {
                     if (!cap.Read(frame) || frame.Empty()) break;
 
-                    LicenseDetection(modelPath, classPath, frame.ToBytes(), frame.Width, frame.Height, frame.Width * frame.Channels());
+                    unsafe
+                    {
+                        //using var frameClone = frame.Clone();
+                        IntPtr dataPtr = frame.Data; // Mat 내부 메모리 포인터
+                        LicenseDetection(modelPath, classPath, dataPtr, frame.Width, frame.Height, (int)frame.Step());
 
-                    BitmapSource bitmapSource = frame.ToBitmapSource();
-                    bitmapSource.Freeze();
+                        BitmapSource bitmapSource = frame.ToBitmapSource();
+                        bitmapSource.Freeze();
 
-                    FrameProcessed?.Invoke(bitmapSource, bitmapSource, null);
+                        FrameProcessed?.Invoke(bitmapSource, bitmapSource, null);
+                    }
 
                     Thread.Sleep(30);
                 }
