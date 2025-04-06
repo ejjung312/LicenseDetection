@@ -12,3 +12,5 @@ float calculateIoU(const ObjectBBox& box1, const ObjectBBox& box2);
 ///////////////////////////////////////////////////////////////////
 
 void selectDNNBackendAndTarget(cv::dnn::Net& net);
+
+void checkRunTime(std::string& title);

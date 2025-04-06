@@ -19,6 +19,9 @@ namespace LicenseDetectionUI
         [DllImport("LicenseDetection.dll")]
         public static extern void ReleaseLicenseModel();
 
+        [DllImport("kernel32.dll")]
+        public static extern bool AllocConsole();
+
         public App()
         {
             _host = CreateHostBuilder().Build();
@@ -41,6 +44,9 @@ namespace LicenseDetectionUI
             window.Show();
 
             base.OnStartup(e);
+
+            // 콘솔 창 열기
+            AllocConsole();
 
             // 모델 로드
             loadDetectModel();

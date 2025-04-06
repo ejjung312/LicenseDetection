@@ -31,25 +31,15 @@ void Yolo11::loadClassNames(const std::string& names_file) {
     }
 
     assert(!class_names_.empty() && "No class names loaded from file `coco.names`");
-    DEBUG_PRINT("Loaded" << class_names_.size() << " class names");
 }
 
-Yolo11::Yolo11(const std::string& model_path, float min_conf, float iou_thresh, ClassChecker valid_class_checker, const std::string& names_file)
+Yolo11::Yolo11(const std::string& model_path, float min_conf, float iou_thresh, 
+                ClassChecker valid_class_checker, const std::string& names_file)
     : min_conf_(min_conf), iou_thresh_(iou_thresh) {
     net_ = cv::dnn::readNetFromONNX(model_path);
-#if defined(CUDA_ACC)
-    net_.setPreferableBackend(cv::dnn::DNN_BACKEND_CUDA);
-    net_.setPreferableTarget(cv::dnn::DNN_TARGET_CUDA);
-    std::cout << "Using CUDA" << std::endl;
-#elif defined(OPENCL_ACC)
-    net_.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
-    net_.setPreferableTarget(cv::dnn::DNN_TARGET_OPENCL);
-    std::cout << "Using OPENCL" << std::endl;
-#else
-    net_.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
-    net_.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
-    std::cout << "Using CPU" << std::endl;
-#endif
+
+    selectDNNBackendAndTarget(net_);
+
     assert(!net_.empty() && "Failed to load ONNX model");
 
     // 클래스 파일
@@ -78,13 +68,11 @@ cv::Mat Yolo11::preprocess(const cv::Mat& image) {
     // resize + blob 한 번에 처리
     cv::Mat blob;
     cv::dnn::blobFromImage(image, blob, 1.0 / 255.0, input_size_, cv::Scalar(), true, false, CV_32F);
-    DEBUG_PRINT_MAT_SHAPE(blob);
 
     return blob;
 }
 
 std::vector<ObjectBBox> Yolo11::postprocess(const cv::Mat& output, const cv::Size& original_size) {
-    DEBUG_PRINT_MAT_SHAPE(output);
     assert(output.dims == 2 && output.cols > 0 &&
         output.rows == (4 + class_names_.size()) &&
         "Invalid output shape");
@@ -171,6 +159,8 @@ std::vector<ObjectBBox> Yolo11::postprocess(const cv::Mat& output, const cv::Siz
 }
 
 std::vector<ObjectBBox> Yolo11::detect(const cv::Mat& image) {
+    
+
     assert(!image.empty() && image.type() == CV_8UC3 && "Invalid input image");
     cv::Size original_size = image.size();
 

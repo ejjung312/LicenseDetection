@@ -3,6 +3,8 @@
 
 #include <opencv2/core/ocl.hpp>
 
+using Clock = std::chrono::high_resolution_clock;
+
 std::string GetResourcePath(const std::string& filename) {
     // MAX_PATH: Windows에서 정의된 최대 경로 길이
     // {0}으로 초기화하여 배열의 모든 요소를 \0(Null 문자)로 채움
@@ -38,20 +40,27 @@ float calculateIoU(const ObjectBBox& box1, const ObjectBBox& box2) {
 
 ///////////////////////////////////////////////////////////////////
 
-void selectDNNBackendAndTarget(cv::dnn::Net& net) {
-    if (cv::cuda::getCudaEnabledDeviceCount() > 0) {
-        std::cout << "Using CUDA backend.\n";
-        net.setPreferableBackend(cv::dnn::DNN_BACKEND_CUDA);
-        net.setPreferableTarget(cv::dnn::DNN_TARGET_CUDA);
-    }
-    else if (cv::ocl::haveOpenCL()) {
-        std::cout << "Using OpenCL backend.\n";
-        net.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
-        net.setPreferableTarget(cv::dnn::DNN_TARGET_OPENCL);
-    }
-    else {
-        std::cout << "Using CPU backend.\n";
-        net.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
-        net.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
-    }
+void selectDNNBackendAndTarget(cv::dnn::Net& net_) {
+#if defined(CUDA_ACC)
+    net_.setPreferableBackend(cv::dnn::DNN_BACKEND_CUDA);
+    net_.setPreferableTarget(cv::dnn::DNN_TARGET_CUDA);
+    std::cout << "Using CUDA" << std::endl;
+#elif defined(OPENCL_ACC)
+    net_.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
+    net_.setPreferableTarget(cv::dnn::DNN_TARGET_OPENCL);
+    std::cout << "Using OPENCL" << std::endl;
+#else
+    net_.setPreferableBackend(cv::dnn::DNN_BACKEND_OPENCV);
+    net_.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
+    std::cout << "Using CPU" << std::endl;
+#endif
+}
+
+void checkRunTime(std::string& title)
+{
+    auto time_start = Clock::now();
+
+    auto time_end = Clock::now();
+    auto process_time = std::chrono::duration_cast<std::chrono::milliseconds>(time_end - time_start);
+    std::cout << "[" << title << " 시간] " << process_time.count() << " ms" << std::endl;
 }
