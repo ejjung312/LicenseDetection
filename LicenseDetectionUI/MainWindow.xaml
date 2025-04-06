@@ -13,9 +13,11 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
+        <!--
         <Grid Grid.Row="0">
             <controls:NavigationBar />
         </Grid>
+        -->
 
         <ScrollViewer Grid.Row="1"
                       HorizontalScrollBarVisibility="Disabled"

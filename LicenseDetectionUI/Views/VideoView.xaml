@@ -7,13 +7,43 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Image Name="VideoFrameImage"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.2*" />
+            <RowDefinition Height="0.8*" />
+        </Grid.RowDefinitions>
+
+        <Button Grid.Row="0"
+                Content="Start Processing"
+                Command="{Binding FrameProcessCommand}"
+                VerticalAlignment="Top"
+                Margin="10" />
+
+        <Image Grid.Row="1"
+               Name="VideoFrameImage"
+               HorizontalAlignment="Stretch"
+               VerticalAlignment="Stretch"
                Source="{Binding VideoFrameImage}"
                Stretch="Uniform" />
-    
-        <Button Content="Start Processing"
-                Command="{Binding FrameProcessCommand}"
-                VerticalAlignment="Bottom"
-                Margin="10" />
+
+        <Grid Grid.Row="2">
+            <ItemsControl ItemsSource="{Binding ImageList}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical">
+                            <Image Source="{Binding LicensePlateImg}"
+                           Width="100"
+                           Margin="5" />
+                            <TextBlock Text="{Binding LicensePlateText}"
+                               HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
     </Grid>
 </UserControl>

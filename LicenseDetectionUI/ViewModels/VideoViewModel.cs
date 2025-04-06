@@ -1,5 +1,7 @@
 ﻿using LicenseDetectionUI.Commands;
+using LicenseDetectionUI.Models;
 using LicenseDetectionUI.Services;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -25,6 +27,17 @@ namespace LicenseDetectionUI.ViewModels
             }
         }
 
+        private ObservableCollection<LicensePlateItem> _detectedList;
+        public ObservableCollection<LicensePlateItem> DetectedList
+        {
+            get => _detectedList;
+            set
+            {
+                _detectedList = value;
+                OnPropertyChanged(nameof(DetectedList));
+            }
+        }
+
         private string _video = "Video/car3.mp4";
         public string Video => _video;
 
@@ -35,6 +48,8 @@ namespace LicenseDetectionUI.ViewModels
         public VideoViewModel(IVideoService videoService)
         {
             _videoService = videoService;
+
+            DetectedList = new ObservableCollection<LicensePlateItem>();
 
             _videoService.FrameProcessed += VideoService_FrameProcessed;
 
@@ -54,6 +69,8 @@ namespace LicenseDetectionUI.ViewModels
                     dispatcher.InvokeAsync(() =>
                     {
                         VideoFrameImage = processedImg;
+
+                        DetectedList.Add(new LicensePlateItem { detectedImage = licensePlateImage, detectedText = licensePlateText });
                     });
                 }
                 catch (TaskCanceledException ex)
