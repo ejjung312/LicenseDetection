@@ -88,9 +88,9 @@ std::vector<ObjectBBox> Yolo11::postprocess(const cv::Mat& output, const cv::Siz
     );
 
     // 최대 confidence 찾기
-    std::vector<std::pair<float, int>> conf_idx_pairs; // <최대 confidence score, 객체 인덱스>
+    std::vector<std::tuple<float, int, int>> conf_idx_class_pairs;
     for (int i = 0; i < output.cols; ++i) {
-        // 0~3: 바운딩 박스 좌표(x, y, width, height)
+        // 0~3: 바운딩 박스 좌표(x, y, w, h)
         // 4~N: 각 클래스의 확률(scores)
         // 가장 높은 conf를 가진 클래스 찾기
         cv::Mat scores = output.rowRange(4, output.rows).col(i);
@@ -98,53 +98,50 @@ std::vector<ObjectBBox> Yolo11::postprocess(const cv::Mat& output, const cv::Siz
         cv::Point max_loc;
         // scores 행렬에서 최대값(max_conf)과 해당 위치(max_loc.y)를 찾음
         cv::minMaxLoc(scores, nullptr, &max_conf, nullptr, &max_loc);
+        int class_id = max_loc.y;
 
-        conf_idx_pairs.push_back({ max_conf, i });
+        conf_idx_class_pairs.emplace_back(max_conf, i, class_id);
     }
 
     // conf가 높은 객체부터 내림차순 정렬
-    std::sort(conf_idx_pairs.begin(), conf_idx_pairs.end(), std::greater<std::pair<float, int>>());
+    std::sort(conf_idx_class_pairs.begin(), conf_idx_class_pairs.end(), 
+        [](const auto& a, const auto& b) { return std::get<0>(a) > std::get<0>(b); });
 
     // NMS - 객체 탐지(Object Detection) 모델에서 중복된 바운딩 박스를 제거하는 알고리즘
-    for (size_t i = 0; i < conf_idx_pairs.size(); ++i) {
-        int idx1 = conf_idx_pairs[i].second;
+    for (size_t i = 0; i < conf_idx_class_pairs.size(); ++i) {
+        auto [conf1, idx1, class_id1] = conf_idx_class_pairs[i];
         if (suppressed[idx1]) continue;
 
-        // 가장 높은 conf를 가진 클래스 찾기
-        cv::Mat scores = output.rowRange(4, output.rows).col(idx1); // idx1번째 객체의 클래스 확률 값
-        double max_conf;
-        cv::Point max_loc;
-        cv::minMaxLoc(scores, nullptr, &max_conf, nullptr, &max_loc);
-        int class_id = max_loc.y;
-
-        // 유효한 클래스가 아니거나 신뢰도가 낮으면 다음 객체로
-        if (!valid_class_checker_(class_id, class_names_[class_id]) || max_conf < min_conf_) continue;
+        if (!valid_class_checker_(class_id1, class_names_[class_id1]) || conf1 < min_conf_) continue;
 
         ObjectBBox bbox1(
-            class_names_[class_id],
-            class_id,
-            max_conf,
-            output.at<float>(0, idx1), // cx
-            output.at<float>(1, idx1), // cy
-            output.at<float>(2, idx1), // w
-            output.at<float>(3, idx1), // h
+            class_names_[class_id1],
+            class_id1,
+            conf1,
+            output.at<float>(0, idx1),
+            output.at<float>(1, idx1),
+            output.at<float>(2, idx1),
+            output.at<float>(3, idx1),
             scale.x,
             scale.y);
         valid_boxes.push_back(bbox1);
 
         // NMS 실행
-        for (size_t j = i + 1; j < conf_idx_pairs.size(); ++j) {
-            int idx2 = conf_idx_pairs[j].second;
+        for (size_t j = i + 1; j < conf_idx_class_pairs.size(); ++j) {
+            auto[conf2, idx2, class_id2] = conf_idx_class_pairs[j];
             if (suppressed[idx2]) continue;
 
+            // (5) 클래스가 다르면 NMS skip
+            if (class_id1 != class_id2) continue;
+
             ObjectBBox bbox2(
-                class_names_[class_id],
-                class_id,
-                output.at<float>(4 + class_id, idx2),
-                output.at<float>(0, idx2), // cx
-                output.at<float>(1, idx2), // cy
-                output.at<float>(2, idx2), // w
-                output.at<float>(3, idx2), // h
+                class_names_[class_id2],
+                class_id2,
+                conf2,
+                output.at<float>(0, idx2),
+                output.at<float>(1, idx2),
+                output.at<float>(2, idx2),
+                output.at<float>(3, idx2),
                 scale.x,
                 scale.y);
 
@@ -159,8 +156,6 @@ std::vector<ObjectBBox> Yolo11::postprocess(const cv::Mat& output, const cv::Siz
 }
 
 std::vector<ObjectBBox> Yolo11::detect(const cv::Mat& image) {
-    
-
     assert(!image.empty() && image.type() == CV_8UC3 && "Invalid input image");
     cv::Size original_size = image.size();
 
