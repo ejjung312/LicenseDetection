@@ -1,4 +1,5 @@
 ﻿using LicenseDetectionUI.HostBuilders;
+using LicenseDetectionUI.Interop;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Runtime.InteropServices;
@@ -12,12 +13,6 @@ namespace LicenseDetectionUI
     public partial class App : Application
     {
         private readonly IHost _host;
-
-        [DllImport("LicenseDetection.dll")]
-        public static extern void InitLicenseModel(string modelPath, string classNames);
-
-        [DllImport("LicenseDetection.dll")]
-        public static extern void ReleaseLicenseModel();
 
         [DllImport("kernel32.dll")]
         public static extern bool AllocConsole();
@@ -60,7 +55,7 @@ namespace LicenseDetectionUI
             base.OnExit(e);
 
             // 모델 메모리 해제
-            ReleaseLicenseModel();
+            NativeMethods.ReleaseLicenseModel();
         }
 
         private void loadDetectModel()
@@ -70,7 +65,7 @@ namespace LicenseDetectionUI
                 string modelPath = "Onnx/license_detect_model.onnx";
                 string classPath = "Onnx/license.names";
 
-                InitLicenseModel(modelPath, classPath);
+                NativeMethods.InitLicenseModel(modelPath, classPath);
             }
             catch (Exception)
             {

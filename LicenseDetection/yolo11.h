@@ -5,6 +5,7 @@
 #include <string>
 
 #include "objectbbox.h"
+#include "detection_result.h"
 
 class Yolo11 {
 public:
@@ -19,13 +20,15 @@ private:
 	ClassChecker valid_class_checker_;
 	
 	cv::Mat preprocess(const cv::Mat& image);
-	std::vector<ObjectBBox> postprocess(const cv::Mat& output, const cv::Size& original_size);
 	void loadClassNames(const std::string& names_file);
 
 public:
 	Yolo11(const std::string& model_path, float min_conf = 0.45f, float iou_thresh = 0.45f, ClassChecker valid_class_checker = nullptr, const std::string& names_file = "");
 	std::map<int, std::string> getClassIdNamePairs() const;
-	std::vector<ObjectBBox> detect(const cv::Mat& image);
+	cv::Mat detect(const cv::Mat& image);
+	void postprocess(const cv::Mat& output, const cv::Size& original_size, DetectionResult* results, int* resultCount);
 };
 
 static Yolo11* g_license_model = nullptr;
+
+////////////////////////////////////////////////////////

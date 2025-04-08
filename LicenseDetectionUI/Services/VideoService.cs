@@ -1,8 +1,9 @@
-﻿using OpenCvSharp;
+﻿using LicenseDetectionUI.Interop;
+using LicenseDetectionUI.Models;
+using OpenCvSharp;
 using OpenCvSharp.WpfExtensions;
 using System.Collections.Concurrent;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Windows.Media.Imaging;
 
 namespace LicenseDetectionUI.Services
@@ -11,9 +12,6 @@ namespace LicenseDetectionUI.Services
     {
         public event Action<BitmapSource, BitmapSource, string> FrameProcessed;
         private ConcurrentQueue<Mat> _frameQueue = new ConcurrentQueue<Mat>();
-
-        [DllImport("LicenseDetection.dll")]
-        public static extern void LicenseDetection(IntPtr data, int width, int height, int stride);
 
         public async Task VideoPlayAsync(string videoPath, CancellationToken cancellationToken)
         {
@@ -52,9 +50,12 @@ namespace LicenseDetectionUI.Services
 
                         unsafe
                         {
+                            DetectionResult[] results = new DetectionResult[10]; // 최대 10개 검출 예상
+                            int resultCount = 0;
+
                             //using var frameClone = frame.Clone();
                             IntPtr dataPtr = frame.Data; // Mat 내부 메모리 포인터
-                            LicenseDetection(dataPtr, frame.Width, frame.Height, (int)frame.Step());
+                            NativeMethods.LicenseDetection(dataPtr, frame.Width, frame.Height, (int)frame.Step(), results, ref resultCount);
 
                             BitmapSource bitmapSource = frame.ToBitmapSource();
                             bitmapSource.Freeze();

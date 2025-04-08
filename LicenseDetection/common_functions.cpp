@@ -28,12 +28,24 @@ std::string GetResourcePath(const std::string& filename) {
  * IoU - 두 개의 영역(예측된 영역과 실제 영역)의 겹치는 정도를 나타내며, 값이 클수록 정확도가 높음
  * IoU = 겹친영역(intersection) / 전체영역(union)
  */
-float calculateIoU(const ObjectBBox& box1, const ObjectBBox& box2) {
-    auto intersection = box1.rect & box2.rect;
+float calculateIoU(const DetectionResult& box1, const DetectionResult& box2, const cv::Point2f& scale) {
+    float x1 = (box1.x - box1.width / 2) * scale.x;
+    float y1 = (box1.y - box1.height / 2) * scale.y;
+    float x2 = (box1.x + box1.width / 2) * scale.x;
+    float y2 = (box1.y + box1.height / 2) * scale.y;
+    cv::Rect rect1 = cv::Rect(cv::Point(x1, y1), cv::Point(x2, y2));
+
+    x1 = (box2.x - box2.width / 2) * scale.x;
+    y1 = (box2.y - box2.height / 2) * scale.y;
+    x2 = (box2.x + box2.width / 2) * scale.x;
+    y2 = (box2.y + box2.height / 2) * scale.y;
+    cv::Rect rect2 = cv::Rect(cv::Point(x1, y1), cv::Point(x2, y2));
+
+    auto intersection = rect1 & rect2;
     if (intersection.empty()) return 0.0f;
 
     float intersection_area = intersection.area();
-    float union_area = box1.rect.area() + box2.rect.area() - intersection_area;
+    float union_area = rect1.area() + rect2.area() - intersection_area;
 
     return intersection_area / union_area;
 }

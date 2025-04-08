@@ -1,6 +1,7 @@
 #include "yolo11.h"
 #include "debug.h"
 #include "common_functions.h"
+#include "detection_result.h"
 
 #include <fstream>
 
@@ -72,12 +73,12 @@ cv::Mat Yolo11::preprocess(const cv::Mat& image) {
     return blob;
 }
 
-std::vector<ObjectBBox> Yolo11::postprocess(const cv::Mat& output, const cv::Size& original_size) {
+void Yolo11::postprocess(const cv::Mat& output, const cv::Size& original_size, DetectionResult* results, int* resultCount) {
     assert(output.dims == 2 && output.cols > 0 &&
         output.rows == (4 + class_names_.size()) &&
         "Invalid output shape");
 
-    std::vector<ObjectBBox> valid_boxes;
+    //std::vector<ObjectBBox> valid_boxes;
     // suppressed변수에 output.cols 크기만큼 false로 벡터 초기화
     std::vector<bool> suppressed(output.cols, false);
     // cv::Point2f - 2D 좌표를 저장하는 구조체. (x,y) 값을 float 타입으로 저장
@@ -107,6 +108,7 @@ std::vector<ObjectBBox> Yolo11::postprocess(const cv::Mat& output, const cv::Siz
     std::sort(conf_idx_class_pairs.begin(), conf_idx_class_pairs.end(), 
         [](const auto& a, const auto& b) { return std::get<0>(a) > std::get<0>(b); });
 
+    int count = 0;
     // NMS - 객체 탐지(Object Detection) 모델에서 중복된 바운딩 박스를 제거하는 알고리즘
     for (size_t i = 0; i < conf_idx_class_pairs.size(); ++i) {
         auto [conf1, idx1, class_id1] = conf_idx_class_pairs[i];
@@ -114,17 +116,14 @@ std::vector<ObjectBBox> Yolo11::postprocess(const cv::Mat& output, const cv::Siz
 
         if (!valid_class_checker_(class_id1, class_names_[class_id1]) || conf1 < min_conf_) continue;
 
-        ObjectBBox bbox1(
-            class_names_[class_id1],
-            class_id1,
-            conf1,
-            output.at<float>(0, idx1),
-            output.at<float>(1, idx1),
-            output.at<float>(2, idx1),
-            output.at<float>(3, idx1),
-            scale.x,
-            scale.y);
-        valid_boxes.push_back(bbox1);
+        results[count].x = output.at<float>(0, idx1);
+        results[count].y = output.at<float>(1, idx1);
+        results[count].width = output.at<float>(2, idx1);
+        results[count].height = output.at<float>(3, idx1);
+        results[count].confidence = conf1;
+        results[count].classId = class_id1;
+
+        count++;
 
         // NMS 실행
         for (size_t j = i + 1; j < conf_idx_class_pairs.size(); ++j) {
@@ -134,30 +133,26 @@ std::vector<ObjectBBox> Yolo11::postprocess(const cv::Mat& output, const cv::Siz
             // (5) 클래스가 다르면 NMS skip
             if (class_id1 != class_id2) continue;
 
-            ObjectBBox bbox2(
-                class_names_[class_id2],
-                class_id2,
-                conf2,
-                output.at<float>(0, idx2),
-                output.at<float>(1, idx2),
-                output.at<float>(2, idx2),
-                output.at<float>(3, idx2),
-                scale.x,
-                scale.y);
+            DetectionResult temp;
+            temp.x = output.at<float>(0, idx1);
+            temp.y = output.at<float>(1, idx1);
+            temp.width = output.at<float>(2, idx1);
+            temp.height = output.at<float>(3, idx1);
+            temp.confidence = conf2;
+            temp.classId = class_id2;
 
             // 두 박스의 IoU(겹치는 비율)가 설정된 임계값보다 크다면 중복된 것으로 간주하고 제거
-            if (calculateIoU(bbox1, bbox2) > iou_thresh_) {
+            if (calculateIoU(results[i], temp, scale) > iou_thresh_) {
                 suppressed[idx2] = true;
             }
         }
     }
 
-    return valid_boxes;
+    *resultCount = count;
 }
 
-std::vector<ObjectBBox> Yolo11::detect(const cv::Mat& image) {
+cv::Mat Yolo11::detect(const cv::Mat& image) {
     assert(!image.empty() && image.type() == CV_8UC3 && "Invalid input image");
-    cv::Size original_size = image.size();
 
     cv::Mat blob = preprocess(image);
 
@@ -174,7 +169,7 @@ std::vector<ObjectBBox> Yolo11::detect(const cv::Mat& image) {
     // 1개의 객체당 (4 + 클래수 개수) 개의 값을 갖도록 행렬 변형
     cv::Mat rawOutput = outputs[0].reshape(0, 4 + class_names_.size());
 
-    return postprocess(rawOutput, original_size);
+    return rawOutput;
 }
 
 std::map<int, std::string> Yolo11::getClassIdNamePairs() const {

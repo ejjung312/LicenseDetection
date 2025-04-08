@@ -16,7 +16,7 @@ void InitLicenseModel(const char* modelPath, const char* classNames)
     }
 }
 
-void LicenseDetection(unsigned char* data, int width, int height, int stride)
+void LicenseDetection(unsigned char* data, int width, int height, int stride, DetectionResult* results, int* resultCount)
 {
     try
     {
@@ -31,12 +31,16 @@ void LicenseDetection(unsigned char* data, int width, int height, int stride)
             return;
         }
 
-        std::vector<ObjectBBox> bbox_list = g_license_model->detect(frame);
+        /*std::vector<ObjectBBox> bbox_list = g_license_model->detect(frame);
 
         for (auto& bbox : bbox_list)
         {
             bbox.draw(frame, cv::Scalar(255, 255, 0));
-        }
+        }*/
+
+        cv::Mat rawOutput = g_license_model->detect(frame);
+        g_license_model->postprocess(rawOutput, frame.size(), results, resultCount);
+
     }
     catch (const std::exception& e)
     {

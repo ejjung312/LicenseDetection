@@ -4,10 +4,11 @@
 #include <string>
 
 #include "objectbbox.h"
+#include "detection_result.h"
 
 std::string GetResourcePath(const std::string& filename);
 
-float calculateIoU(const ObjectBBox& box1, const ObjectBBox& box2);
+float calculateIoU(const DetectionResult& box1, const DetectionResult& box2, const cv::Point2f& scale);
 
 ///////////////////////////////////////////////////////////////////
 
