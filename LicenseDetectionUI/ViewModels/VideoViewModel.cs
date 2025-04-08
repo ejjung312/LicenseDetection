@@ -69,7 +69,12 @@ namespace LicenseDetectionUI.ViewModels
                     // 비동기 UI 갱신
                     dispatcher.InvokeAsync(() =>
                     {
-                        DetectedList.Add(new LicensePlateItem { detectedImage = licensePlateImage, detectedText = licensePlateText });
+                        if (DetectedList.Count > 7)
+                        {
+                            DetectedList.RemoveAt(0);
+                        }
+
+                        DetectedList.Add(new LicensePlateItem { DetectedImage = licensePlateImage, DetectedText = licensePlateText });
                     });
                 }
                 catch (TaskCanceledException ex)

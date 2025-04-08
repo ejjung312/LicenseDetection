@@ -4,7 +4,7 @@ namespace LicenseDetectionUI.Models
 {
     public class LicensePlateItem
     {
-        public BitmapSource detectedImage { get; set; }
-        public string detectedText { get; set; }
+        public BitmapSource DetectedImage { get; set; }
+        public string DetectedText { get; set; }
     }
 }

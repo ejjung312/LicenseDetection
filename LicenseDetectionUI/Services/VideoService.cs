@@ -58,7 +58,7 @@ namespace LicenseDetectionUI.Services
                             IntPtr dataPtr = frame.Data; // Mat 내부 메모리 포인터
                             NativeMethods.LicenseDetection(dataPtr, frame.Width, frame.Height, (int)frame.Step(), results, ref resultCount);
 
-                            for (int i = 0; i <= resultCount; i++)
+                            for (int i = 0; i < resultCount; i++)
                             {
                                 DetectionResult temp = results[i];
 
@@ -67,13 +67,13 @@ namespace LicenseDetectionUI.Services
 
                                 ///////////////////////////////////////////
                                 // 자동차번호판 자르기
-                                //Mat licenseImage = frame.SubMat(new Rect(temp.X1, temp.Y1, temp.Width, temp.Height));
+                                Rect roi = new Rect(temp.X1, temp.Y1, temp.X2-temp.X1, temp.Y2-temp.Y1);
+                                Mat licenseImage = new Mat(frame, roi);
 
-                                //BitmapSource licenseImageSource = licenseImage.ToBitmapSource();
-                                //licenseImageSource.Freeze();
+                                BitmapSource licenseImageSource = licenseImage.ToBitmapSource();
+                                licenseImageSource.Freeze();
 
-                                //LicensePlateProcessed?.Invoke(licenseImageSource, null);
-                                //LicensePlateProcessed?.Invoke(licenseImageSource, null);
+                                LicensePlateProcessed?.Invoke(licenseImageSource, null);
                             }
 
                             BitmapSource bitmapSource = frame.ToBitmapSource();

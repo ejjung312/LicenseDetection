@@ -8,8 +8,9 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
             <RowDefinition Height="0.2*" />
-            <RowDefinition Height="0.8*" />
+            <RowDefinition Height="0.6*" />
         </Grid.RowDefinitions>
 
         <Button Grid.Row="0"
@@ -26,7 +27,7 @@
                Stretch="Uniform" />
 
         <Grid Grid.Row="2">
-            <ItemsControl ItemsSource="{Binding ImageList}">
+            <ItemsControl ItemsSource="{Binding DetectedList}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel />
@@ -35,11 +36,11 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Vertical">
-                            <Image Source="{Binding LicensePlateImg}"
-                           Width="100"
-                           Margin="5" />
-                            <TextBlock Text="{Binding LicensePlateText}"
-                               HorizontalAlignment="Center"/>
+                            <Image Source="{Binding DetectedImage}"
+                                   Width="100"
+                                   Margin="5" />
+                            <TextBlock Text="{Binding DetectedText}"
+                                       HorizontalAlignment="Center"/>
                         </StackPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
