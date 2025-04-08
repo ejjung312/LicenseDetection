@@ -5,8 +5,10 @@ namespace LicenseDetectionUI.Models
     [StructLayout(LayoutKind.Sequential)]
     public struct DetectionResult
     {
-        public int X;
-        public int Y;
+        public int X1;
+        public int Y1;
+        public int X2;
+        public int Y2;
         public int Width;
         public int Height;
         public float Confidence;

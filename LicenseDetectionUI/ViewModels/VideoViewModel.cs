@@ -52,12 +52,34 @@ namespace LicenseDetectionUI.ViewModels
             DetectedList = new ObservableCollection<LicensePlateItem>();
 
             _videoService.FrameProcessed += VideoService_FrameProcessed;
+            _videoService.LicensePlateProcessed += VideoService_LicensePlateProcessed;
 
             _token = new CancellationTokenSource();
             FrameProcessCommand = new FrameProcessCommand(this, _videoService, _token.Token);
         }
 
-        private void VideoService_FrameProcessed(BitmapSource processedImg, BitmapSource licensePlateImage, string licensePlateText)
+        private void VideoService_LicensePlateProcessed(BitmapSource licensePlateImage, string licensePlateText)
+        {
+            // UI 스레드에서 호출
+            var dispatcher = Application.Current?.Dispatcher;
+            if (dispatcher != null && !dispatcher.HasShutdownStarted)
+            {
+                try
+                {
+                    // 비동기 UI 갱신
+                    dispatcher.InvokeAsync(() =>
+                    {
+                        DetectedList.Add(new LicensePlateItem { detectedImage = licensePlateImage, detectedText = licensePlateText });
+                    });
+                }
+                catch (TaskCanceledException ex)
+                {
+
+                }
+            }
+        }
+
+        private void VideoService_FrameProcessed(BitmapSource processedImg)
         {
             // UI 스레드에서 호출
             var dispatcher = Application.Current?.Dispatcher;
@@ -69,8 +91,6 @@ namespace LicenseDetectionUI.ViewModels
                     dispatcher.InvokeAsync(() =>
                     {
                         VideoFrameImage = processedImg;
-
-                        DetectedList.Add(new LicensePlateItem { detectedImage = licensePlateImage, detectedText = licensePlateText });
                     });
                 }
                 catch (TaskCanceledException ex)
