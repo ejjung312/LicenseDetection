@@ -1,6 +1,6 @@
 #include <opencv2/opencv.hpp>
 
-#include "license_detection.h"
+#include "license_plate_detection.h"
 #include "objectbbox.h"
 #include "yolo11.h"
 
