@@ -18,7 +18,7 @@
     <ClCompile Include="test.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="LicenseDetection.cpp">
+    <ClCompile Include="license_detection.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="objectbbox.cpp">
@@ -35,7 +35,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="LicenseDetection.h">
+    <ClInclude Include="license_detection.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="objectbbox.h">

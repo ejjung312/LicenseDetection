@@ -5,12 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:LicenseDetectionUI.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="600" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
-            <RowDefinition Height="0.2*" />
-            <RowDefinition Height="0.6*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
         <Button Grid.Row="0"
@@ -19,32 +19,36 @@
                 VerticalAlignment="Top"
                 Margin="10" />
 
-        <Image Grid.Row="1"
-               Name="VideoFrameImage"
-               HorizontalAlignment="Stretch"
-               VerticalAlignment="Stretch"
-               Source="{Binding VideoFrameImage}"
-               Stretch="Uniform" />
+        <Border Grid.Row="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+            <Image Name="VideoFrameImage"
+                   Source="{Binding VideoFrameImage}"
+                   Stretch="Uniform"
+                   MaxWidth="760"
+                   MaxHeight="400" />
+        </Border>
 
-        <Grid Grid.Row="2">
-            <ItemsControl ItemsSource="{Binding DetectedList}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Vertical">
-                            <Image Source="{Binding DetectedImage}"
-                                   Width="100"
-                                   Margin="5" />
-                            <TextBlock Text="{Binding DetectedText}"
-                                       HorizontalAlignment="Center"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </Grid>
+        <ItemsControl Grid.Row="2"
+                      ItemsSource="{Binding DetectedList}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Center" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Vertical"
+                                Margin="5">
+                        <Image Source="{Binding DetectedImage}"
+                               Width="100"
+                               Height="100" />
+                        <TextBlock Text="{Binding DetectedText}"
+                                   HorizontalAlignment="Center" />
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </Grid>
 </UserControl>
