@@ -1,5 +1,4 @@
 #include "yolo11.h"
-#include "debug.h"
 #include "common_functions.h"
 #include "detection_result.h"
 
