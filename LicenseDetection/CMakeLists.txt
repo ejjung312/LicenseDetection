@@ -26,7 +26,7 @@ set(HEADERS
     yolo11.h
 )
 
-# DLL 颇老 积己
+# DLL, so 颇老 积己
 add_library(${PROJECT_NAME} SHARED ${SOURCES} ${HEADERS})
 
 if (WIN32)
