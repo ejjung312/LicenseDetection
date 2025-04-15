@@ -8,7 +8,7 @@ void InitLicenseModel(const char* modelPath, const char* classNames)
     if (!g_license_model)
     {
 
-        g_license_model = new Yolo11(modelPath, 0.25f, 0.25f,
+        g_license_model = new Yolo11(modelPath, 0.7f, 0.7f,
             [](int lbl_id, const std::string lbl)
             { return lbl_id >= 0 && lbl_id <= 8; },
             classNames);
