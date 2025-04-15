@@ -18,9 +18,6 @@
     <ClCompile Include="license_plate_detection.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="objectbbox.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="yolo11.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -33,9 +30,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="license_plate_detection.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="objectbbox.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="yolo11.h">

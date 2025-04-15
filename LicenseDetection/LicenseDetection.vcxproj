@@ -22,13 +22,11 @@
     <ClCompile Include="common_functions.cpp" />
     <ClCompile Include="detection_result.h" />
     <ClCompile Include="license_plate_detection.cpp" />
-    <ClCompile Include="objectbbox.cpp" />
     <ClCompile Include="yolo11.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common_functions.h" />
     <ClInclude Include="license_plate_detection.h" />
-    <ClInclude Include="objectbbox.h" />
     <ClInclude Include="yolo11.h" />
   </ItemGroup>
   <ItemGroup>

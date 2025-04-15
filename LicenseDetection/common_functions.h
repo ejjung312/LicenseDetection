@@ -3,7 +3,8 @@
 #include <windows.h>
 #include <string>
 
-#include "objectbbox.h"
+#include <opencv2/opencv.hpp>
+
 #include "detection_result.h"
 
 std::string GetResourcePath(const std::string& filename);

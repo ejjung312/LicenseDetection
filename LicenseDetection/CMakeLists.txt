@@ -16,7 +16,6 @@ endif()
 set(SOURCES
     common_functions.cpp
     license_plate_detection.cpp
-    objectbbox.cpp
     yolo11.cpp
 )
 
@@ -24,7 +23,6 @@ set(HEADERS
     common_functions.h
     detection_result.h
     license_plate_detection.h
-    objectbbox.h
     yolo11.h
 )
 

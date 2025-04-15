@@ -77,7 +77,6 @@ void Yolo11::postprocess(const cv::Mat& output, const cv::Size& original_size, D
         output.rows == (4 + class_names_.size()) &&
         "Invalid output shape");
 
-    //std::vector<ObjectBBox> valid_boxes;
     // suppressed변수에 output.cols 크기만큼 false로 벡터 초기화
     std::vector<bool> suppressed(output.cols, false);
     // cv::Point2f - 2D 좌표를 저장하는 구조체. (x,y) 값을 float 타입으로 저장
