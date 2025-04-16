@@ -25,6 +25,7 @@ namespace LicenseDetectionUI
         private static IHostBuilder CreateHostBuilder(string[] args=null)
         {
             return Host.CreateDefaultBuilder(args)
+                .AddAPI()
                 .AddServices()
                 .AddStores()
                 .AddViewModels()
