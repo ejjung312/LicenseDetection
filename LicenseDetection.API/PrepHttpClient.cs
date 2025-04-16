@@ -21,7 +21,7 @@ namespace LicenseDetection.API
             return JsonConvert.DeserializeObject<T>(jsonResponse);
         }
 
-        public async Task<HttpResponseMessage> PostAsync(string uri, HttpContent content)
+        public async Task<HttpResponseMessage> PostAsync<T>(string uri, HttpContent content)
         {
             HttpResponseMessage response = await _client.PostAsync(uri, content);
 
