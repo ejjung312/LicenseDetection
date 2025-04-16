@@ -4,7 +4,6 @@
 #include <opencv2/dnn/dnn.hpp>
 #include <string>
 
-#include "objectbbox.h"
 #include "detection_result.h"
 
 class Yolo11 {

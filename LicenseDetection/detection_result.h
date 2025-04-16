@@ -1,6 +1,8 @@
 #pragma once
 
 struct DetectionResult {
+	float cx;
+	float cy;
 	int x1;
 	int y1;
 	int x2;

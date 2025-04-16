@@ -1,7 +1,6 @@
 #include <opencv2/opencv.hpp>
 
 #include "license_plate_detection.h"
-#include "objectbbox.h"
 #include "yolo11.h"
 
 void InitLicenseModel(const char* modelPath, const char* classNames)
@@ -9,7 +8,7 @@ void InitLicenseModel(const char* modelPath, const char* classNames)
     if (!g_license_model)
     {
 
-        g_license_model = new Yolo11(modelPath, 0.25f, 0.25f,
+        g_license_model = new Yolo11(modelPath, 0.7f, 0.7f,
             [](int lbl_id, const std::string lbl)
             { return lbl_id >= 0 && lbl_id <= 8; },
             classNames);
@@ -30,13 +29,6 @@ void LicenseDetection(unsigned char* data, int width, int height, int stride, De
             std::cerr << "Frame creation failed!" << std::endl;
             return;
         }
-
-        /*std::vector<ObjectBBox> bbox_list = g_license_model->detect(frame);
-
-        for (auto& bbox : bbox_list)
-        {
-            bbox.draw(frame, cv::Scalar(255, 255, 0));
-        }*/
 
         cv::Mat rawOutput = g_license_model->detect(frame);
         g_license_model->postprocess(rawOutput, frame.size(), results, resultCount);

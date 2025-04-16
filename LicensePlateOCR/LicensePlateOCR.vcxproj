@@ -26,6 +26,9 @@
     <ClInclude Include="license_plate_ocr.h" />
     <ClInclude Include="paddle_ocr.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="CMakeLists.txt" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
