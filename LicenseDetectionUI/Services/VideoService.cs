@@ -24,7 +24,7 @@ namespace LicenseDetectionUI.Services
             int delayPerFrame = (int)(1000.0 / cap.Fps);
 
             // 입력 스레드
-            var readingTask =  Task.Run(() =>
+            var readingTask = Task.Run(() =>
             {
                 Mat frame = new Mat();
                 while (!cancellationToken.IsCancellationRequested)
@@ -62,18 +62,18 @@ namespace LicenseDetectionUI.Services
                             {
                                 DetectionResult temp = results[i];
 
-                                // 자동차번호판 영역표시
-                                Cv2.Rectangle(frame, new Point(temp.X1, temp.Y1), new Point(temp.X2, temp.Y2), new Scalar(0,255,0));
-
-                                ///////////////////////////////////////////
                                 // 자동차번호판 자르기
                                 Rect roi = new Rect(temp.X1, temp.Y1, temp.X2-temp.X1, temp.Y2-temp.Y1);
                                 Mat licenseImage = new Mat(frame, roi);
 
+                                // ViewModel에 전달
                                 BitmapSource licenseImageSource = licenseImage.ToBitmapSource();
                                 licenseImageSource.Freeze();
 
                                 LicensePlateProcessed?.Invoke(licenseImageSource, null);
+
+                                // 자동차번호판 영역표시
+                                Cv2.Rectangle(frame, new Point(temp.X1, temp.Y1), new Point(temp.X2, temp.Y2), new Scalar(0, 255, 0));
                             }
 
                             BitmapSource bitmapSource = frame.ToBitmapSource();

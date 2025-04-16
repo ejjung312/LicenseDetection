@@ -41,7 +41,7 @@ namespace LicenseDetectionUI
             base.OnStartup(e);
 
             // 콘솔 창 열기
-            AllocConsole();
+            //AllocConsole();
 
             // 모델 로드
             loadDetectModel();
