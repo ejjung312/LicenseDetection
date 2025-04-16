@@ -19,12 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="centroidtracker.cpp" />
     <ClCompile Include="common_functions.cpp" />
     <ClCompile Include="detection_result.h" />
     <ClCompile Include="license_plate_detection.cpp" />
     <ClCompile Include="yolo11.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="centroidtracker.h" />
     <ClInclude Include="common_functions.h" />
     <ClInclude Include="license_plate_detection.h" />
     <ClInclude Include="yolo11.h" />

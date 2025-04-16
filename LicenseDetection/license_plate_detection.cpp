@@ -2,6 +2,7 @@
 
 #include "license_plate_detection.h"
 #include "yolo11.h"
+#include "centroidtracker.h"
 
 void InitLicenseModel(const char* modelPath, const char* classNames)
 {
@@ -13,13 +14,18 @@ void InitLicenseModel(const char* modelPath, const char* classNames)
             { return lbl_id >= 0 && lbl_id <= 8; },
             classNames);
     }
+
+    if (!g_centroid_tracker)
+    {
+        g_centroid_tracker = new CentroidTracker(20);
+    }
 }
 
 void LicenseDetection(unsigned char* data, int width, int height, int stride, DetectionResult* results, int* resultCount)
 {
     try
     {
-        if (!g_license_model) {
+        if (!g_license_model || !g_centroid_tracker) {
             std::cerr << "Model not initialized!" << std::endl;
             return;
         }
@@ -33,6 +39,10 @@ void LicenseDetection(unsigned char* data, int width, int height, int stride, De
         cv::Mat rawOutput = g_license_model->detect(frame);
         g_license_model->postprocess(rawOutput, frame.size(), results, resultCount);
 
+        if (*resultCount > 0)
+        {
+            auto objects = g_centroid_tracker->update(results, resultCount);
+        }
     }
     catch (const std::exception& e)
     {
@@ -46,5 +56,11 @@ void ReleaseLicenseModel()
     {
         delete g_license_model;
         g_license_model = nullptr;
+    }
+
+    if (g_centroid_tracker)
+    {
+        delete g_centroid_tracker;
+        g_centroid_tracker = nullptr;
     }
 }

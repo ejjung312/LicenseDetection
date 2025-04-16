@@ -27,6 +27,9 @@
     <ClCompile Include="detection_result.h">
       <Filter>헤더 파일</Filter>
     </ClCompile>
+    <ClCompile Include="centroidtracker.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="license_plate_detection.h">
@@ -36,6 +39,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="common_functions.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="centroidtracker.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
