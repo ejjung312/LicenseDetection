@@ -26,12 +26,12 @@ std::string GetResourcePath(const std::string& filename) {
     return dirPath + "\\" + filename;
 }
 
-void getRectPosition(DetectionResult& box, float cx_, float cy_, float w, float h, float scale_x, float scale_y)
+void getRectPosition(DetectionResult& box, float scale_x, float scale_y)
 {
-    float x1 = (cx_ - w / 2) * scale_x;
-    float y1 = (cy_ - h / 2) * scale_y;
-    float x2 = (cx_ + w / 2) * scale_x;
-    float y2 = (cy_ + h / 2) * scale_y;
+    float x1 = (box.cx - box.width / 2) * scale_x;
+    float y1 = (box.cy - box.height / 2) * scale_y;
+    float x2 = (box.cx + box.width / 2) * scale_x;
+    float y2 = (box.cy + box.height / 2) * scale_y;
 
     box.x1 = x1;
     box.y1 = y1;

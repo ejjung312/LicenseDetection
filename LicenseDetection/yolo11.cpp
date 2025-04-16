@@ -114,14 +114,16 @@ void Yolo11::postprocess(const cv::Mat& output, const cv::Size& original_size, D
 
         if (!valid_class_checker_(class_id1, class_names_[class_id1]) || conf1 < min_conf_) continue;
 
-        float cx = output.at<float>(0, idx1);
-        float cy = output.at<float>(1, idx1);
+        /*float cx = output.at<float>(0, idx1);
+        float cy = output.at<float>(1, idx1);*/
+        results[count].cx = output.at<float>(0, idx1);
+        results[count].cy = output.at<float>(1, idx1);
         results[count].width = output.at<float>(2, idx1);
         results[count].height = output.at<float>(3, idx1);
         results[count].confidence = conf1;
         results[count].classId = class_id1;
 
-        getRectPosition(results[count], cx, cy, results[count].width, results[count].height, scale.x, scale.y);
+        getRectPosition(results[count], scale.x, scale.y);
 
         count++;
 
@@ -134,14 +136,16 @@ void Yolo11::postprocess(const cv::Mat& output, const cv::Size& original_size, D
             if (class_id1 != class_id2) continue;
 
             DetectionResult temp;
-            float cx = output.at<float>(0, idx2);
-            float cy = output.at<float>(1, idx2);
+            /*float cx = output.at<float>(0, idx2);
+            float cy = output.at<float>(1, idx2);*/
+            temp.cx = output.at<float>(0, idx2);
+            temp.cy = output.at<float>(1, idx2);
             temp.width = output.at<float>(2, idx2);
             temp.height = output.at<float>(3, idx2);
             temp.confidence = conf2;
             temp.classId = class_id2;
 
-            getRectPosition(temp, cx, cy, temp.width, temp.height, scale.x, scale.y);
+            getRectPosition(temp, scale.x, scale.y);
 
             // 두 박스의 IoU(겹치는 비율)가 설정된 임계값보다 크다면 중복된 것으로 간주하고 제거
             if (calculateIoU(results[i], temp, scale) > iou_thresh_) {
