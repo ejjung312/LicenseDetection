@@ -31,7 +31,7 @@ namespace LicenseDetectionUI.Services
             int delayPerFrame = (int)(1000.0 / cap.Fps);
 
             // 입력 스레드
-            var readingTask =  Task.Run(() =>
+            var readingTask = Task.Run(() =>
             {
                 Mat frame = new Mat();
                 while (!cancellationToken.IsCancellationRequested)

@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 
 namespace LicenseDetectionUI.Controls
 {
@@ -10,6 +11,12 @@ namespace LicenseDetectionUI.Controls
         public NavigationBar()
         {
             InitializeComponent();
+        }
+
+        private void Close_Click(object sender, RoutedEventArgs e)
+        {
+            Window window = Window.GetWindow(this);
+            window.Close();
         }
     }
 }

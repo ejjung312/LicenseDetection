@@ -2,10 +2,20 @@
 
 #include "detection_result.h"
 
+#ifdef _WIN32
+	#ifdef LICENSEDETECTION_EXPORTS
+		#define LICENSE_API __declspec(dllexport)
+	#else
+		#define LICENSE_API __declspec(dllimport)
+	#endif
+#else
+	#define LICENSE_API
+#endif
+
 extern "C" {
-	__declspec(dllexport) void InitLicenseModel(const char* modelPath, const char* classNames);
+	LICENSE_API void InitLicenseModel(const char* modelPath, const char* classNames);
 
-	__declspec(dllexport) void LicenseDetection(unsigned char* data, int width, int height, int stride, DetectionResult* results, int* resultCount);
+	LICENSE_API void LicenseDetection(unsigned char* data, int width, int height, int stride, DetectionResult* results, int* resultCount);
 
-	__declspec(dllexport) void ReleaseLicenseModel();
+	LICENSE_API void ReleaseLicenseModel();
 }

@@ -6,23 +6,26 @@
         xmlns:local="clr-namespace:LicenseDetectionUI"
         xmlns:controls="clr-namespace:LicenseDetectionUI.Controls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="800">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+        Title="MainWindow" Height="790" Width="1150"
+        MinWidth="1150" MinHeight="790" WindowStyle="None"
+        WindowStartupLocation="CenterScreen" AllowsTransparency="True" Background="Transparent">
+    <Border CornerRadius="5" Background="#ffffff">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="45" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-        <!--
-        <Grid Grid.Row="0">
-            <controls:NavigationBar />
+            <Grid Grid.Row="0">
+                <controls:NavigationBar />
+            </Grid>
+
+            <ScrollViewer
+                Grid.Row="1"
+                          HorizontalScrollBarVisibility="Disabled"
+                          VerticalScrollBarVisibility="Auto">
+                <ContentControl Content="{Binding CurrentViewModel}" />
+            </ScrollViewer>
         </Grid>
-        -->
-
-        <ScrollViewer Grid.Row="1"
-                      HorizontalScrollBarVisibility="Disabled"
-                      VerticalScrollBarVisibility="Auto">
-            <ContentControl Content="{Binding CurrentViewModel}" />
-        </ScrollViewer>
-    </Grid>
+    </Border>
 </Window>

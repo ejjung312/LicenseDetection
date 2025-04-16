@@ -7,7 +7,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LicenseDetection", "License
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LicenseDetectionUI", "LicenseDetectionUI\LicenseDetectionUI.csproj", "{B7819885-3DCA-4D48-91AB-D39EDB847A12}"
 	ProjectSection(ProjectDependencies) = postProject
-		{3E9559B6-63B6-4F71-A922-398F73A7E41B} = {3E9559B6-63B6-4F71-A922-398F73A7E41B}
 		{7AEAD3B0-D91A-4B3F-9E28-BF42A306DB50} = {7AEAD3B0-D91A-4B3F-9E28-BF42A306DB50}
 	EndProjectSection
 EndProject

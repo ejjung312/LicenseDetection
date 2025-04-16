@@ -19,36 +19,90 @@
                 VerticalAlignment="Top"
                 Margin="10" />
 
-        <Border Grid.Row="1"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center">
-            <Image Name="VideoFrameImage"
-                   Source="{Binding VideoFrameImage}"
-                   Stretch="Uniform"
-                   MaxWidth="760"
-                   MaxHeight="400" />
-        </Border>
+        <!-- Right Section -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="300" />
+            </Grid.ColumnDefinitions>
 
-        <ItemsControl Grid.Row="2"
-                      ItemsSource="{Binding DetectedList}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal"
-                                HorizontalAlignment="Center" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Vertical"
-                                Margin="5">
-                        <Image Source="{Binding DetectedImage}"
-                               Width="100"
-                               Height="100" />
-                        <TextBlock Text="{Binding DetectedText}"
-                                   HorizontalAlignment="Center" />
-                    </StackPanel>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+            <Border Grid.Column="1"
+                    CornerRadius="0 0 5 0"
+                    Background="#4880ff">
+                <ItemsControl ItemsSource="{Binding DetectedList}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical"
+                                        HorizontalAlignment="Center" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="#598bff" CornerRadius="7" Margin="30 4" BorderThickness="1">
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Setter Property="BorderBrush"
+                                                Value="Transparent" />
+
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver"
+                                                     Value="True">
+                                                <Setter Property="BorderBrush"
+                                                        Value="#ffffff" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                                <StackPanel Orientation="Horizontal"
+                                            Margin="5">
+                                    <Image Source="{Binding DetectedImage}"
+                                            Width="150"/>
+                                    <!--
+                                    <TextBlock Text="{Binding DetectedText}"
+                                                HorizontalAlignment="Center" 
+                                                FontSize="14"/>
+                                    -->
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Border>
+        
+            <!-- Left Section -->
+            <Border Grid.Column="0"
+                    Background="#f2f5f8"
+                    CornerRadius="0 0 0 5">
+                <Grid VerticalAlignment="Center" Margin="40 0 -30 0">
+                    <Border CornerRadius="7 0 0 0"
+                            Background="#f7f8fb"
+                            Height="50"
+                            Margin="40 -30 60 0"
+                            VerticalAlignment="Top" />
+                    <Border CornerRadius="7 0 0 0"
+                            Background="#fdfdfd"
+                            Height="50"
+                            Margin="20 -15 60 0"
+                            VerticalAlignment="Top" />
+
+                    <Border CornerRadius="7"
+                            Background="#ffffff">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="30"
+                                              Direction="-130"
+                                              ShadowDepth="5"
+                                              Opacity="0.1" />
+                        </Border.Effect>
+
+                        <Grid Margin="20 0">
+                            <Image Name="VideoFrameImage"
+                                   Source="{Binding VideoFrameImage}"
+                                   Stretch="Uniform" />
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
+        
     </Grid>
 </UserControl>

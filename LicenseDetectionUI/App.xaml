@@ -5,12 +5,19 @@
              xmlns:views="clr-namespace:LicenseDetectionUI.Views"
              xmlns:local="clr-namespace:LicenseDetectionUI">
     <Application.Resources>
-        <DataTemplate DataType="{x:Type viewmodels:VideoViewModel}">
-            <views:VideoView />
-        </DataTemplate>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/Common.xaml" />
+                <ResourceDictionary Source="/Styles/NavigationBar.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        
+            <DataTemplate DataType="{x:Type viewmodels:VideoViewModel}">
+                <views:VideoView />
+            </DataTemplate>
 
-        <DataTemplate DataType="{x:Type viewmodels:LoggingViewModel}">
-            <views:Logging />
-        </DataTemplate>
+            <DataTemplate DataType="{x:Type viewmodels:LoggingViewModel}">
+                <views:Logging />
+            </DataTemplate>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
