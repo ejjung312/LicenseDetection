@@ -81,14 +81,16 @@ namespace LicenseDetectionUI.Services
                         Rect roi = new Rect(temp.X1, temp.Y1, temp.X2 - temp.X1, temp.Y2 - temp.Y1);
                         Mat licenseImage = new Mat(frame, roi);
 
-                        // TODO 임시 테스트
                         APIResponse result = await _licensePlateRecognition.getLicensePlateInfo(licenseImage.ToBytes(".jpg"));
 
-                        // ViewModel에 전달
-                        BitmapSource licenseImageSource = licenseImage.ToBitmapSource();
-                        licenseImageSource.Freeze();
+                        if (!result.IsExist)
+                        {
+                            // ViewModel에 전달
+                            BitmapSource licenseImageSource = licenseImage.ToBitmapSource();
+                            licenseImageSource.Freeze();
 
-                        LicensePlateProcessed?.Invoke(licenseImageSource, result.LicensePlateText);
+                            LicensePlateProcessed?.Invoke(licenseImageSource, result.LicensePlateText);
+                        }
 
                         // 자동차번호판 영역표시
                         Cv2.Rectangle(frame, new Point(temp.X1, temp.Y1), new Point(temp.X2, temp.Y2), new Scalar(0, 255, 0));
