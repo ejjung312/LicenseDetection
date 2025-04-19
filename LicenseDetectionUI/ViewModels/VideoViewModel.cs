@@ -69,7 +69,7 @@ namespace LicenseDetectionUI.ViewModels
                     // 비동기 UI 갱신
                     dispatcher.InvokeAsync(() =>
                     {
-                        if (DetectedList.Count > 7)
+                        if (DetectedList.Count > 11)
                         {
                             DetectedList.RemoveAt(0);
                         }
