@@ -25,6 +25,7 @@ namespace LicenseDetectionUI
         private static IHostBuilder CreateHostBuilder(string[] args=null)
         {
             return Host.CreateDefaultBuilder(args)
+                .AddAPI()
                 .AddServices()
                 .AddStores()
                 .AddViewModels()
@@ -41,7 +42,7 @@ namespace LicenseDetectionUI
             base.OnStartup(e);
 
             // 콘솔 창 열기
-            //AllocConsole();
+            AllocConsole();
 
             // 모델 로드
             loadDetectModel();
