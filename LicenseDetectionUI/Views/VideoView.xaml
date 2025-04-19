@@ -58,8 +58,12 @@
                                     <Image Source="{Binding DetectedImage}"
                                             Width="150"/>
                                     <TextBlock Text="{Binding DetectedText}"
-                                                HorizontalAlignment="Center" 
-                                                FontSize="14"/>
+                                               Width="120"
+                                               Margin="10"
+                                               HorizontalAlignment="Center" 
+                                               VerticalAlignment="Center"
+                                               Foreground="#ffffff"
+                                               FontSize="16"/>
                                 </StackPanel>
                             </Border>
                         </DataTemplate>
