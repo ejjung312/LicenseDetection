@@ -10,7 +10,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LicenseDetectionUI", "Licen
 		{7AEAD3B0-D91A-4B3F-9E28-BF42A306DB50} = {7AEAD3B0-D91A-4B3F-9E28-BF42A306DB50}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LicenseDetection.API", "LicenseDetection.API\LicenseDetection.API.csproj", "{77CB182F-0E37-431C-945C-9450834EA934}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LicenseDetection.API", "LicenseDetection.API\LicenseDetection.API.csproj", "{77CB182F-0E37-431C-945C-9450834EA934}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
